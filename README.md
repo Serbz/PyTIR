@@ -7,5 +7,7 @@ I have created a python script I call PyTIR, and it groups the values of brightn
 I differenced Frame1 at 90% with the original, reduced the contrast, and increased the brightness.
 
 Original: https://i.imgur.com/MK8MNlA.png
+
 Frame1 (Output): https://i.imgur.com/rcFZYPS.png
+
 Difference: https://i.imgur.com/5KZrvcf.png
