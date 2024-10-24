@@ -2,24 +2,25 @@ import numpy, PIL, cv2, os, string, time, colorsys, math, datetime, asyncio, mat
 from PIL import Image
 from matplotlib import pyplot as plt
 
+wdir = r"D:\\GP\\PyGAud - PyTIR - TTS\\PyTIR\\"
 now = datetime.datetime.now()
 t = now.strftime("%d%m%y_%H%M%S")
-inputFile = open(r"E:\God_Proof\Document\PyTIR\PyTIR.py", "r")
-exportFile = open(fr"E:\God_Proof\Document\PyTIR\bak\PyTIR{t}.py", "w")
+inputFile = open(fr"{wdir}\PyTIR.py", "r")
+exportFile = open(fr"{wdir}\bak\PyTIR{t}.py", "w")
 for line in inputFile:
     new_line = line.replace('\t', '    ')
     exportFile.write(new_line)
 inputFile.close()
 exportFile.close()
 
-npifc = "Process3-1_41"
+npifc = "Process1-2-all_frames"
 print(npifc, "line 14")
 try:
-    os.mkdir(fr"E:\God_Proof\Document\PyTIR\npi\{npifc}")
+    os.mkdir(fr"{wdir}\npi\{npifc}")
 except:
     pass
 try:
-    os.mkdir(fr"E:\God_Proof\Document\PyTIR\npi\{npifc}\diff")
+    os.mkdir(fr"{wdir}\npi\{npifc}\diff")
 except:
     pass
 ####### CONVERT BGR TO RGB
@@ -52,15 +53,15 @@ def make_hsv(pixels):
 def make_img_from_hsv(pixels, name):
     pixels = cv2.cvtColor(numpy.array(pixels, dtype=numpy.uint8), cv2.COLOR_HSV2RGB)
     im = Image.fromarray(numpy.array(pixels, dtype=numpy.uint8))
-    cv2.imwrite(fr'E:\God_Proof\Document\PyTIR\{name}.png', numpy.asarray(im))
-    im = cv2.imread(fr"E:\God_Proof\Document\PyTIR\{name}.png")
+    cv2.imwrite(fr'{wdir}\{name}.png', numpy.asarray(im))
+    im = cv2.imread(fr"{wdir}\{name}.png")
     return im
     
 def make_img(pixels, name):
     #pixels = cv2.cvtColor(numpy.array(pixels, dtype=numpy.uint8), cv2.COLOR_HSV2RGB)
     im = Image.fromarray(numpy.array(pixels, dtype=numpy.uint8))
-    cv2.imwrite(fr'E:\God_Proof\Document\PyTIR\{name}.png', numpy.asarray(im))
-    im = cv2.imread(fr"E:\God_Proof\Document\PyTIR\{name}.png")
+    cv2.imwrite(fr'{wdir}\{name}.png', numpy.asarray(im))
+    im = cv2.imread(fr"{wdir}\{name}.png")
     return im
 
 def vertical_pixels(pixels):
@@ -225,20 +226,20 @@ def group_im(hsv):
             #print(numpy.asarray(img2).shape)
             #print(numpy.asarray(hsv).shape)
             #try:
-            #    os.remove("E:\God_Proof\Document\PyTIR\out.log")
-            #    os.remove("E:\God_Proof\Document\PyTIR\out2.log")
+            #    os.remove("{wdir}\out.log")
+            #    os.remove("{wdir}\out2.log")
             #except:
             #    pass
             #try:
-            #    os.system("cmd.exe /c echo >> E:\God_Proof\Document\PyTIR\out.log")
-            #    os.system("cmd.exe /c echo >> E:\God_Proof\Document\PyTIR\out2.log")
+            #    os.system("cmd.exe /c echo >> {wdir}\out.log")
+            #    os.system("cmd.exe /c echo >> {wdir}\out2.log")
             #except:
             #    pass
-            #with open("E:\God_Proof\Document\PyTIR\out.log", "w") as f:
+            #with open("{wdir}\out.log", "w") as f:
             #    for each in list(img2):
             #        f.write(fr"{each}")
             #f.close()
-            #with open("E:\God_Proof\Document\PyTIR\out2.log", "w") as f:
+            #with open("{wdir}\out2.log", "w") as f:
             #    for each in numpy.asarray(hsv):
             #        f.write(fr"{each}")
             #f.close()
@@ -402,6 +403,7 @@ def pixel_changes(npi, im, averageGroups=None, groupAverages=None, diff_val=None
                             pixel[pxc] = (lastavg[1][pxc][0]/average[1][pxc][0])*pixel[pxc]
                             pixel[pxc] = ((pixel[pxc]-(lastavg[1][pxc][0]-average[1][pxc][0]))/255)*(pixel[pxc]*2)                          
                         if op is False:
+                                        
                             pixel[pxc] = ((255/(pixel[pxc]*2))*((abs(pixel[pxc]-lastavg[1][pxc][0])+pixel[pxc]-lastavg[1][pxc][0])))+(pixel[pxc])
                     elif m == 2:
                         if average > pixel[pxc]:
@@ -521,7 +523,7 @@ def get_histogram_data(imnp, counter):
         hist = cv2.calcHist([chan], [0], None, [514], [0, 256])
         #print(hist.size, hist.shape)
         #print(hist)
-        with open(fr"E:\God_Proof\Document\PyTIR\logs\Histogram_Frame{counter}_{color}.log", "w") as f:
+        with open(fr"{wdir}\logs\Histogram_Frame{counter}_{color}.log", "w") as f:
             f.write(str(hist))
         f.close()
         hist_dict = Merge(hist_dict, {fr"{color}": hist})
@@ -538,19 +540,19 @@ def get_histogram_data(imnp, counter):
         #plt.show()
         now = datetime.datetime.now()
         t = now.strftime("%H%M%S_%f")
-        plt.savefig(fr"E:\God_Proof\Document\PyTIR\npi\{npifc}\Histogram_Frame{counter}_{color}_{t}")
+        plt.savefig(fr"{wdir}\npi\{npifc}\Histogram_Frame{counter}_{color}_{t}")
         
     hist_dict = Merge(hist_dict, {fr"value": hist_v})    
     #hist = cv2.calcHist(v, [0], None, [514], [0, 256])
-    #with open(fr"E:\God_Proof\Document\PyTIR\logs\Histogram_Frame{counter}_hsvValue.log", "w") as f:
+    #with open(fr"{wdir}\logs\Histogram_Frame{counter}_hsvValue.log", "w") as f:
     #    f.write(str(hist))
     #f.close()
 
-    #numpy.save(fr"E:\God_Proof\Document\PyTIR\logs\hist_dict_Frame{counter}.npy", hist_dict)
-    with open(fr"E:\God_Proof\Document\PyTIR\logs\hist_dict_Frame{counter}.log", "w") as f:
+    #numpy.save(fr"{wdir}\logs\hist_dict_Frame{counter}.npy", hist_dict)
+    with open(fr"{wdir}\logs\hist_dict_Frame{counter}.log", "w") as f:
         f.write(str(hist_dict))
     f.close()
-    with open("E:\God_Proof\Document\PyTIR\logs\chans.log", "w") as f:
+    with open(fr"{wdir}\logs\chans.log", "w") as f:
         f.write(str(chans))
     f.close()   
     #histogram1 = cv2.calcHist(imnp.copy(), [0], None, [256], [0, 256])
@@ -594,7 +596,7 @@ def process1(imnp, counter):
     hsv_px, im, h, s, v = make_hsv(imnp.copy())
     op = True
     loop_counter = 0
-    while loop_counter < 10:
+    while loop_counter < 2:
         loop_counter += 1
         hsv_px_check = ""
         hsv_px_check += f"268: {hsv_px[0][0]}\n"
@@ -658,12 +660,12 @@ for each in mp4:
     mp4 = each
 mp4 = mp4.split(".")
 mp4 = str(mp4[0])
-framePath = fr"E:\God_Proof\Document\PyTIR\{mp4}"
+framePath = fr"{wdir}\{mp4}"
 try:
     os.mkdir(framePath)
 except FileExistsError:
     pass
-#os.system(fr"ffmpeg -i E:\God_Proof\Document\PyTIR\VID_20230115_004343.mp4 E:\God_Proof\Document\PyTIR\VID_20230115_004343\{mp4}%d.png")
+#os.system(fr"ffmpeg -i {wdir}\VID_20230115_004343.mp4 {wdir}\VID_20230115_004343\{mp4}%d.png")
 numFrames = 0
 for each in os.listdir(fr"{framePath}"):
     numFrames += 1
@@ -678,8 +680,8 @@ for frame in os.listdir(framePath):
         frameSel = str(framePath+r"/"+frame)
         #while True:
         counter += 1
-        if counter == 80: #or counter == 80:
-            shutil.copy(frameSel, fr'E:/God_Proof/Document/PyTIR/npi/{npifc}/{mp4}_Frame{counter}_original.{list(frame.split(".")[::-1])[0]}')
+        if counter >= 57: #or counter == 80:
+            shutil.copy(frameSel, fr'{wdir}/npi/{npifc}/{mp4}_Frame{counter}_original.{list(frame.split(".")[::-1])[0]}')
             imnp = make_imnp(frameSel)
             #process2(imnp, counter)
             framelist.append([frameSel, counter])
@@ -757,3 +759,10 @@ our input is the image to be divided (this case with three channels) and the out
     int bin_w = cvRound( (double) hist_w/histSize );
     Mat histImage( hist_h, hist_w, CV_8UC3, Scalar( 0,0,0) );
 ''')
+
+
+
+
+
+
+
